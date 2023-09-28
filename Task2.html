@@ -5,26 +5,34 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Task 2</title>
 </head>
-<body style="background-color: blueviolet;">
-    <section style="display: flex;">
-        <form action="">
-            <h2 style="color: white;">Sample login form</h2>
-            <div class="email">
-                <label for="email" style="color: white;">email</label>
-                <input type="text"> 
-            </div>
-          <div class="pass">
-            <label for="password" style="color: white;">password</label>
-            <input type="password">
-        </div>
-        <button>Submit</button>
-       
-        </form>
-    </section>
+<body>
+  
+<h2>Task 2 get link by button submit</h2>
 
-    <script>
+<p><a id="linkid" type="text/html" hreflang="en-us" rel="nofollow" target="_self"
+    href="http://www.w3resourc.com">This is an example link</a></p> <button
+onclick="getAttributes()">Click here to get attributes value</button>
 
-    </script>
-    
+<script>
+function getAttributes() {
+
+  var link = document.getElementById("linkid");
+
+  // Get the attribute values
+  var href = link.getAttribute("href");
+  var hreflang = link.getAttribute("hreflang");
+  var rel = link.getAttribute("rel");
+  var target = link.getAttribute("target");
+  var type = link.getAttribute("type");
+
+  // Display the attribute values
+  alert("href: " + href +
+        "\nhreflang: " + hreflang +
+        "\nrel: " + rel +
+        "\ntarget: " + target +
+        "\ntype: " + type);
+}
+</script>
+
 </body>
 </html>
