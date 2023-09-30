@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            background-color: #282c34;
+            color: white;
+            font-family: 'Arial', sans-serif;
+        }
+
+        #board {
+            display: grid;
+            grid-template-columns: repeat(3, 100px);
+            gap: 5px;
+        }
+
+        .cell {
+            width: 100px;
+            height: 100px;
+            border: 2px solid #61dafb;
+            font-size: 2em;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            background-color: #61dafb;
+            transition: background-color 0.3s;
+        }
+
+        .cell:hover {
+            background-color: #457b9d;
+        }
+
+        /* Style for X and O */
+        .cell.X {
+            color: #ff6347; /* Tomato color for X */
+        }
+
+        .cell.O {
+            color: #98c379; /* Mint color for O */
+        }
+
+        .message {
+            margin-top: 20px;
+            font-size: 1.5em;
+        }
+
+        .controls {
+            margin-top: 20px;
+            display: flex;
+            gap: 10px;
+        }
+    </style>
+    <title>Tic Tac Toe</title>
+</head>
+<body>
+    <div>
+        <label for="player1">Player 1:</label>
+        <input type="text" id="player1" placeholder="Enter name" />
+    </div>
+    <div>
+        <label for="player2">Player 2:</label>
+        <input type="text" id="player2" placeholder="Enter name" />
+    </div>
+
+    <div id="board"></div>
+    <div class="message">Current player: </div>
+
+    <div class="controls">
+        <button onclick="startGame()">Start Game</button>
+        <button onclick="restartGame()">Restart Game</button>
+    </div>
+
+    <script>
+        const board = document.getElementById('board');
+        const message = document.querySelector('.message');
+        const player1Input = document.getElementById('player1');
+        const player2Input = document.getElementById('player2');
+        const controls = document.querySelector('.controls');
+        const cells = [];
+
+        let currentPlayer;
+        let gameBoard;
+        let gameActive;
+
+        function startGame() {
+            const player1 = player1Input.value.trim() || 'Player 1';
+            const player2 = player2Input.value.trim() || 'Player 2';
+
+            currentPlayer = 'X';
+            gameBoard = ['', '', '', '', '', '', '', '', ''];
+            gameActive = true;
+
+            message.textContent = `Current player: ${player1}`;
+
+            // Display the game board
+            board.innerHTML = '';
+            for (let i = 0; i < 9; i++) {
+                const cell = document.createElement('div');
+                cell.classList.add('cell');
+                cell.dataset.index = i;
+                cell.addEventListener('click', handleCellClick);
+                cells.push(cell);
+                board.appendChild(cell);
+            }
+
+            // Display player names
+            controls.innerHTML = `<span>${player1}</span> vs <span>${player2}</span>`;
+        }
+
+        function restartGame() {
+            startGame();
+        }
+
+        // Handle cell click
+        function handleCellClick(event) {
+            const index = event.target.dataset.index;
+
+            if (gameBoard[index] === '' && gameActive) {
+                gameBoard[index] = currentPlayer;
+                cells[index].textContent = currentPlayer;
+                cells[index].classList.add(currentPlayer);
+
+                const winner = checkWin();
+                if (winner) {
+                    message.textContent = `${winner} wins!`;
+                    gameActive = false;
+                } else if (gameBoard.every(cell => cell !== '')) {
+                    message.textContent = 'It\'s a draw!';
+                    gameActive = false;
+                } else {
+                    currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
+                    message.textContent = `Current player: ${currentPlayer}`;
+                }
+            }
+        }
+
+        // Check for a win
+        function checkWin() {
+            const winPatterns = [
+                [0, 1, 2],
+                [3, 4, 5],
+                [6, 7, 8],
+                [0, 3, 6],
+                [1, 4, 7],
+                [2, 5, 8],
+                [0, 4, 8],
+                [2, 4, 6]
+            ];
+
+            for (const pattern of winPatterns) {
+                const [a, b, c] = pattern;
+                if (gameBoard[a] !== '' && gameBoard[a] === gameBoard[b] && gameBoard[a] === gameBoard[c]) {
+                    return gameBoard[a]; // Return the winning player
+                }
+            }
+
+            return null; // No winner
+        }
+    </script>
+</body>
+</html>
